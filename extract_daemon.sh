@@ -19,8 +19,6 @@
 #  cd split_unvanquished
 #  ./extract_daemon.sh
 
-tab="$(printf '\t')"
-
 if [ -z "${TMPDIR}" ]
 then
 	temp_dir="$(mktemp -d "/tmp/extract.XXXXXXXX}")"
@@ -271,16 +269,12 @@ git clone "${daemon_mirror}" "${daemon_local}"
 
 	git checkout -b 'submodules' "${main_branch}"
 
-	cat > '.gitmodules' <<-EOF
-	[submodule "libs/breakpad"]
-	${tab}path = libs/breakpad
-	${tab}url = https://github.com/Unvanquished/breakpad.git
-	[submodule "libs/recastnavigation"]
-	${tab}path = libs/recastnavigation
-	${tab}url = https://github.com/Unvanquished/recastnavigation.git
-	EOF
+	git rm libs/breakpad
+	git rm libs/recastnavigation
 
-	git add '.gitmodules'
+	git submodule add https://github.com/Unvanquished/breakpad.git libs/breakpad
+	git submodule add https://github.com/Unvanquished/recastnavigation.git libs/recastnavigation
+
 	git commit -m 'readd submodules'
 
 	git checkout "${main_branch}"
