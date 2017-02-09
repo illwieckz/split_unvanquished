@@ -1,0 +1,14 @@
+daemon
+src/common
+src/engine
+src/libs/crunch
+src/libs/detour
+src/libs/fastlz
+src/libs/findlocale
+src/libs/minizip
+src/libs/openexr
+src/libs/pdcurses
+src/libs/recast
+src/libs/tinyformat
+src/libs/gettext
+src/libs/zlib

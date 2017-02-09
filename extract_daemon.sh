@@ -3,7 +3,7 @@
 # Author:  Thomas DEBESSE <dev@illwieckz.net>
 # License: CC0 1.0 [https://creativecommons.org/publicdomain/zero/1.0/]
 
-# It's expecte to run in tmpfs mounted point to speed up I/Os
+# It's recommended to run filters in tmpfs mounted point to speed up I/Os
 # and to save your precious SSD
 #
 # Example:
@@ -11,6 +11,13 @@
 #  mkdir -p /mnt/tmpfs
 #  mount -t tmpfs -o size=2G tmpfs /mnt/tmpfs
 #  export TMPDIR='/mnt/tmpfs'
+#
+# It's even better and faster to do everything on that tmpfs mounted point
+#
+#  cd /mnt/tmpfs
+#  git clone https://github.com/illwieckz/split_unvanquished.git
+#  cd split_unvanquished
+#  ./extract_daemon.sh
 
 tab="$(printf '\t')"
 
@@ -21,7 +28,7 @@ else
 	temp_dir="$(mktemp -d "${TMPDIR}/extract.XXXXXXXX")"
 fi
 
-work_dir="${TMPDIR}/extract_daemon"
+work_dir="$(pwd)/extract_daemon"
 bin_dir="${work_dir}/bin"
 repo_dir="${work_dir}/repo"
 list_dir="${work_dir}/list"
@@ -217,7 +224,7 @@ git clone --mirror "${unvanquished_mirror}" "${daemon_mirror}"
 	printf '== move files in final subdirectory ==\n'
 
 	# filter_dir is automatically deleted by git filter-branch
-	filter_dir="$(mktemp -d "${work_dir}/filter.XXXXXXXX")"
+	filter_dir="$(mktemp -d "${temp_dir}/filter.XXXXXXXX")"
 	git filter-branch -d "${filter_dir}" -f \
 		--tree-filter "moveFilter '${final_subdir}' '${moved_list}'" \
 		--tag-name-filter cat -- --all
@@ -229,7 +236,7 @@ git clone --mirror "${unvanquished_mirror}" "${daemon_mirror}"
 	printf '== extract subdirectory ==\n'
 
 	# filter_dir is automatically deleted by git filter-branch
-	filter_dir="$(mktemp -d "${work_dir}/filter.XXXXXXXX")"
+	filter_dir="$(mktemp -d "${temp_dir}/filter.XXXXXXXX")"
 	git filter-branch -d "${filter_dir}" -f \
 		--subdirectory-filter "${final_subdir}" \
 		--tag-name-filter cat -- --all
