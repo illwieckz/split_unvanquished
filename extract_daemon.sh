@@ -111,7 +111,7 @@ wr switchBranch <<\EOF
 	git symbolic-ref HEAD "refs/heads/${1}"
 EOF
 
-# it's better to not parallelize
+# it's better to not parallelize otherwise
 # race condition can happen
 wr listPreviousFilesInBranch <<\EOF
 	current_branch="$(getCurrentBranch)"
@@ -144,9 +144,9 @@ wr grepAllFilesPerSubdir <<\EOF
 	| sort -u
 EOF
 
-# it's better to not parallelize
+# it's better to not parallelize otherwise
 # race condition can happen
-wr grepAllFilesInAllSubdir <<\EOF
+wr grepAllFilesInAllSubdirs <<\EOF
 	cat "${2}" \
 	| xargs -P1 -n1 grepAllFilesPerSubdir "${1}"
 EOF
@@ -207,7 +207,7 @@ git clone --mirror "${unvanquished_mirror}" "${daemon_mirror}"
 
 	printf '== list all files from engine subdirectories ==\n'
 
-	grepAllFilesInAllSubdir "${all_list}" "${subdir_list}" > "${movable_list}"
+	grepAllFilesInAllSubdirs "${all_list}" "${subdir_list}" > "${movable_list}"
 
 	printf '== list all previous files to subdirectories ==\n'
 
