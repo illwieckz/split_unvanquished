@@ -201,6 +201,12 @@ git clone --mirror "${unvanquished_mirror}" "${daemon_mirror}"
 	git for-each-ref --format='%(refname)' 'refs/pull/' \
 	| xargs -P1 -n1 git update-ref -d
 
+	# remove some 'reviewable' stuff that mess repository
+	# see https://github.com/Unvanquished/Unvanquished/pull/828
+	# and https://reviewable.io/reviews/unvanquished/unvanquished/828
+	git for-each-ref --format='%(refname)' 'refs/reviewable/' \
+	| xargs -P1 -n1 git update-ref -d
+
 	printf '== list all files from repository ==\n'
 
 	listAllFiles > "${all_list}"
