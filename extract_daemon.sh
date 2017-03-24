@@ -15,8 +15,8 @@
 # It's even better and faster to do everything on that tmpfs mounted point
 #
 #  cd /mnt/tmpfs
-#  git clone https://github.com/illwieckz/split_unvanquished.git
-#  cd split_unvanquished
+#  git clone https://github.com/illwieckz/unvanquished_split.git
+#  cd unvanquished_split
 #  ./extract_daemon.sh
 
 if [ -z "${TMPDIR}" ]
