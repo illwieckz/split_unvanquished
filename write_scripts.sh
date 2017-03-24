@@ -6,6 +6,8 @@
 # xargs need executable files in path and can't work with functions
 # that's why we create files instead of functions
 
+bin_dir="$(pwd)/bin"
+
 # wr is an helper to write scripts
 wr () {
 	mkdir -p "${bin_dir}"

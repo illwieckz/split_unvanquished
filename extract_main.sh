@@ -17,7 +17,7 @@
 #  cd /mnt/tmpfs
 #  git clone https://github.com/illwieckz/unvanquished_split.git
 #  cd unvanquished_split
-#  ./extract_daemon.sh
+#  ./extract_main.sh
 
 if [ -z "${TMPDIR}" ]
 then
@@ -26,7 +26,7 @@ else
 	temp_dir="$(mktemp -d "${TMPDIR}/extract.XXXXXXXX")"
 fi
 
-work_dir="$(pwd)/extract_daemon"
+work_dir="$(pwd)/extract_main"
 repo_dir="${work_dir}/repo"
 list_dir="${work_dir}/list"
 
@@ -34,11 +34,11 @@ bin_dir="$(pwd)/bin"
 PATH="${PATH}:${bin_dir}"
 
 unvanquished_remote='git@github.com:Unvanquished/Unvanquished.git'
-daemon_remote='git@github.com:illwieckz/Daemon.git'
-daemon_mirror="${repo_dir}/Daemon.git"
+mainpak_remote='git@github.com:illwieckz/unvanquished_src.pk3dir'
+mainpak_mirror="${repo_dir}/unvanquished_src.pk3dir.git"
 unvanquished_mirror="${repo_dir}/Unvanquished.git"
-daemon_local="${repo_dir}/Daemon"
-final_subdir='daemon'
+mainpak_local="${repo_dir}/unvanquished_src.pk3dir"
+final_subdir='main'
 main_branch='master'
 subdir_list="${list_dir}/subdir_list.txt"
 all_list="${list_dir}/all_list.txt"
@@ -46,28 +46,12 @@ moved_list="${list_dir}/moved_list.txt"
 previous_list="${list_dir}/previous_list.txt"
 movable_list="${list_dir}/movable_list.txt"
 
-# there is no need to care about it
-# pivot_commit='38f0b762c14cb2df86fd5baa1d7e9624d75d579d'
-
 mkdir -p "${work_dir}"
 mkdir -p "${repo_dir}"
 mkdir -p "${list_dir}"
 
 cat > "${subdir_list}" <<-EOF
 	${final_subdir}
-	src/common
-	src/engine
-	src/libs/crunch
-	src/libs/detour
-	src/libs/fastlz
-	src/libs/findlocale
-	src/libs/minizip
-	src/libs/openexr
-	src/libs/pdcurses
-	src/libs/recast
-	src/libs/tinyformat
-	src/libs/gettext
-	src/libs/zlib
 EOF
 
 # unwrap tools
@@ -91,10 +75,10 @@ fi
 
 printf '== mirror new tree ==\n'
 
-git clone --mirror "${unvanquished_mirror}" "${daemon_mirror}"
+git clone --mirror "${unvanquished_mirror}" "${mainpak_mirror}"
 
 (
-	cd "${daemon_mirror}"
+	cd "${mainpak_mirror}"
 	switchBranch "${main_branch}"
 
 	printf '== drop pull requests ==\n'
@@ -157,41 +141,21 @@ git clone --mirror "${unvanquished_mirror}" "${daemon_mirror}"
 
 	printf '== push new repository ==\n'
 
-	git push -f --mirror "${daemon_remote}"
+	git push -f --mirror "${mainpak_remote}"
 )
 
 printf '== clone local repository ==\n'
 
-git clone "${daemon_mirror}" "${daemon_local}"
+git clone "${mainpak_mirror}" "${mainpak_local}"
 
 (
-	cd "${daemon_local}"
+	cd "${mainpak_local}"
 	git checkout "${main_branch}"
 
 	printf '== set new origin ==\n'
 
 	git remote remove origin
-	git remote add origin "${daemon_remote}"
-
-	printf '== readd submodules ==\n'
-
-	git checkout -b 'submodules' "${main_branch}"
-
-	git rm libs/breakpad
-	git rm libs/recastnavigation
-
-	git submodule add https://github.com/Unvanquished/breakpad.git libs/breakpad
-	git submodule add https://github.com/Unvanquished/recastnavigation.git libs/recastnavigation
-
-	git commit -m 'readd submodules'
-
-	git checkout "${main_branch}"
-	git merge 'submodules'
-
-	printf '== push submodules ==\n'
-
-	git push origin 'submodules'
-	git push origin "${main_branch}"
+	git remote add origin "${mainpak_remote}"
 )
 
 #EOF
