@@ -1,0 +1,6 @@
+configs/classes/human_base.attr.cfg
+configs/classes/human_base.model.cfg
+models/players/builder/locdamage.cfg
+models/players/human_base/locdamage.cfg
+models/players/human_bsuit/locdamage.cfg
+scripts/jetpack.shader

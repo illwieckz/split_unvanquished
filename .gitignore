@@ -1,3 +1,6 @@
-extract_daemon/repo
-extract_main/repo
-bin
+extract_daemon/repo/
+extract_main/repo/
+extract_buildables/repo/
+extract_players/repo/
+extract_weapons/repo/
+bin/

@@ -1,0 +1,3 @@
+models/weapons
+configs/weapon
+configs/missiles

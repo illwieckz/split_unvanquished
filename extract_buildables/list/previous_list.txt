@@ -1,0 +1,3 @@
+scripts/armoury.shader
+scripts/trapper.shader
+sound/buildables/tesla/sound.cfg
