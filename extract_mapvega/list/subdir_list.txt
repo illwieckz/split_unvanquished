@@ -1,0 +1,6 @@
+meta/vega
+minimaps
+models
+sound
+textures/vega_custom_src
+main
